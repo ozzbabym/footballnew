@@ -81,7 +81,6 @@ const getSuccessGames = (games, file) => {
         let successGame = [];
         games.forEach(game => {
             if(obj[game.id] && (obj[game.id].set === "1-й Тайм")) {
-                console.log(obj[game.id].set)
                 let count = Number(game.set1player1) + Number(game.set1player2);
                 if (count > 0) {
                     successGame.push(obj[game.id])
@@ -100,12 +99,14 @@ const getFailGames = (games, file) => {
         statisFile.allGame.forEach(game => {
             obj[game.id] = game;
         });
-        games.allGame.forEach(game => {
-            obj2[game.id] = game;
-        });
+        if (games.allGame) {
+            games.allGame.forEach(game => {
+                obj2[game.id] = game;
+            });
+        }
         let failGame = [];
         games.forEach(game => {
-            if((obj[game.id]) && (obj2[game.id].set === "Перерыв")) {
+            if((obj[game.id]) && obj2[game.id] && (obj2[game.id].set === "Перерыв")) {
                 let count = Number(obj[game.id].set1player1) + Number(obj[game.id].set1player2);
                 if (count === 0) {
                     failGame.push(obj[game.id])

@@ -4,7 +4,7 @@
     "hour": 15,
     "successCount": 0,
     "failCount": 0,
-    "allCount": 0,
+    "allCount": 2,
     "allGame": [],
     "successGames": [],
     "failGames": []
