@@ -81,7 +81,8 @@ const getSuccessGames = (games, file) => {
         let successGame = [];
         games.forEach(game => {
             if(obj[game.id]) {
-                if (game.id === obj[game.id].id) {
+                let count = Number(game.set1player1) + Number(game.set1player2);
+                if (count > 0) {
                     successGame.push(obj[game.id])
                 }
             }
