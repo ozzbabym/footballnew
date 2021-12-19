@@ -99,11 +99,9 @@ const getFailGames = (games, file) => {
         statisFile.allGame.forEach(game => {
             obj[game.id] = game;
         });
-        if (games.allGame) {
-            games.allGame.forEach(game => {
-                obj2[game.id] = game;
-            });
-        }
+        games.forEach(game => {
+            obj2[game.id] = game;
+        });
         let failGame = [];
         games.forEach(game => {
             if((obj[game.id]) && obj2[game.id] && (obj2[game.id].set === "Перерыв")) {
