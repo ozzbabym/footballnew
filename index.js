@@ -100,7 +100,7 @@ const getFailGames = (games, file) => {
         });
         let failGame = [];
         games.forEach(game => {
-            if((obj[game.id]) && obj[game.id].set === 'Перерыв') {
+            if((obj[game.id]) && obj[game.id].timeGame > 45) {
                 let count = Number(obj[game.id].set1player1) + Number(obj[game.id].set1player2);
                 if (count === 0) {
                     failGame.push(obj[game.id])
