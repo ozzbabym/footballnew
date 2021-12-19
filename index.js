@@ -13,7 +13,7 @@ app.listen(PORT, () => {
 let good = `✅✅✅`;
 let bad = `❌❌❌`;
 
-let othersGames = /Simulated|Reality|Cyber|Russia|Masters|Daily|OPEN|Smash|Setka|Cup/
+//let othersGames = /Simulated|Reality|Cyber|Russia|Masters|Daily|OPEN|Smash|Setka|Cup/
 let xhttp = new XMLHttpRequest();
 const url1 = 'https://api.telegram.org/bot1219533506:AAFWBi6UMHINMQD0o6zlzCnPFCQCLxbOm2Q/sendMessage?chat_id=-285687209&text='
 
@@ -48,7 +48,7 @@ const getGames = (data) => {
         describeGame.game = game.MIO && game.MIO.TSt || 'simple';
         describeGame.player1 = game.O1;
         describeGame.player2 = game.O2;
-        describeGame.field = game.MIS && game.MIS[1] && game.MIS[1].V || '';
+        describeGame.field = game.MIO && game.MIO.loc || '';
         describeGame.set = game.SC.CPS;
         describeGame.set1player1 = game.SC.FS && game.SC.FS.S1 || 0;
         describeGame.set1player2 = game.SC.FS && game.SC.FS.S2 || 0;
@@ -77,7 +77,7 @@ const getSuccessGames = (games) => {
         let player1count = Number(game.set1player1);
         let player2count = Number(game.set1player2);
         let countSet1 = player1count + player2count;
-        if ((game.timeGame > 26) && (countSet1 > 0) && (game.set === '1-й Тайм')) {
+        if ((game.timeGame > 26) && (countSet1 > 0)) {
             successGame.push(game);
         }
     });
@@ -89,7 +89,7 @@ const getFailGames = (games) => {
 
     games.forEach( game => {
         let count = Number(game.set1player1) + Number(game.set1player2)
-        if ((game.timeGame < 50) && (!count) && (game.set === '2-й Тайм')) {
+        if ((game.timeGame === 45) && (count === 0)) {
             failGame.push(game);
         }
     });
@@ -108,10 +108,10 @@ const sendMessages = (subject, subjectFile, result) => {
     });
 
     Object.keys(obj).forEach( gameId => {
-        if (!Object.keys(obj2).length) {
+        if (!Object.keys(obj2).length || !(obj2[gameId])) {
             const {
                 country, player1, set1player1,
-                player2, set1player2, field, id
+                player2, set1player2, timeGame, id
             } = obj[gameId];
 
             let text = "Стратегия Футбол\n" +
@@ -123,39 +123,13 @@ const sendMessages = (subject, subjectFile, result) => {
                 + "1 тайм\n"
                 + player1 + ":  " + set1player1 + "\n"
                 + player2 + ":  " + set1player2 + "\n"
-                + `поверхность ${field}\n` +
+                + `время 1 тайма ${timeGame}\n` +
                 "\nМожно ставить на ТБ 0,5 в первом тайме"
             setTimeout(() => {
                 xhttp.open("GET", url1 + encodeURIComponent(text), true)
                 xhttp.send();
             }, 1000)
-            return;
         }
-
-        Object.keys(obj2).forEach(fileId => {
-            if (!(obj2[gameId])) {
-                const {
-                    country, player1, set1player1,
-                    player2, set1player2, field, id
-                } = obj[gameId];
-
-                let text = "Стратегия Футбол\n" +
-                    `#${id} \n` +
-                    country + "\n"
-                    + `${result !== '' ?
-                        result === `✅✅✅` ? `✅✅✅ Прошла \n` : `❌❌❌ Не прошла \n` :
-                        '⚠️⚠️⚠️Начало ставки'}`
-                    + "1 тайм\n"
-                    + player1 + ":  " + set1player1 + "\n"
-                    + player2 + ":  " + set1player2+ "\n"
-                    + `поверхность ${field}\n` +
-                    "\nМожно ставить на ТБ 0,5 в 1 тайме"
-                setTimeout(() => {
-                    xhttp.open("GET", url1 + encodeURIComponent(text), true)
-                    xhttp.send();
-                }, 1000)
-            }
-        });
     });
 };
 
