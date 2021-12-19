@@ -90,16 +90,24 @@ const getSuccessGames = (games, file) => {
     }
 };
 
-const getFailGames = (games) => {
-    let failGame = [];
-
-    games.forEach( game => {
-        let count = Number(game.set1player1) + Number(game.set1player2)
-        if ((game.timeGame === 45) && (count === 0)) {
-            failGame.push(game);
-        }
-    });
-    return failGame;
+const getFailGames = (games, file) => {
+    let statisFile = file.statistics
+    let obj = {};
+    if(statisFile.allGame) {
+        statisFile.allGame.forEach(game => {
+            obj[game.id] = game;
+        });
+        let failGame = [];
+        games.forEach(game => {
+            if((obj[game.id]) && obj[game.id].set === 'Перерыв') {
+                let count = Number(obj[game.id].set1player1) + Number(obj[game.id].set1player2);
+                if (count === 0) {
+                    failGame.push(obj[game.id])
+                }
+            }
+        });
+        return failGame;
+    }
 };
 
 const sendMessages = (subject, subjectFile, result) => {
@@ -157,7 +165,7 @@ const FootBallBot = async () => {
         const games = getGames(data);
         const selectedGames = getSelectedGames(games);
         const successGames = getSuccessGames(games, file)
-        const failGames = getFailGames(selectedGames)
+        const failGames = getFailGames(games, file)
 
         const reWrite = (file, games) => {
             if (file) {
