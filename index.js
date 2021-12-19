@@ -80,7 +80,8 @@ const getSuccessGames = (games, file) => {
         });
         let successGame = [];
         games.forEach(game => {
-            if(obj[game.id]) {
+            if(obj[game.id] && (obj[game.id].set === "1-й Тайм")) {
+                console.log(obj[game.id].set)
                 let count = Number(game.set1player1) + Number(game.set1player2);
                 if (count > 0) {
                     successGame.push(obj[game.id])
@@ -94,13 +95,17 @@ const getSuccessGames = (games, file) => {
 const getFailGames = (games, file) => {
     let statisFile = file.statistics
     let obj = {};
+    let obj2 = {};
     if(statisFile.allGame) {
         statisFile.allGame.forEach(game => {
             obj[game.id] = game;
         });
+        games.allGame.forEach(game => {
+            obj2[game.id] = game;
+        });
         let failGame = [];
         games.forEach(game => {
-            if((obj[game.id]) && (obj[game.id].set === "Перерыв")) {
+            if((obj[game.id]) && (obj2[game.id].set === "Перерыв")) {
                 let count = Number(obj[game.id].set1player1) + Number(obj[game.id].set1player2);
                 if (count === 0) {
                     failGame.push(obj[game.id])
@@ -138,7 +143,7 @@ const sendMessages = (subject, subjectFile, result) => {
                 + "1 тайм\n"
                 + player1 + ":  " + set1player1 + "\n"
                 + player2 + ":  " + set1player2 + "\n"
-                + `время 1 тайма ${timeGame}\n` +
+                + `время 1 тайма, ${timeGame} минута\n` +
                 "\nМожно ставить на ТБ 0,5 в первом тайме"
             setTimeout(() => {
                 xhttp.open("GET", url1 + encodeURIComponent(text), true)
