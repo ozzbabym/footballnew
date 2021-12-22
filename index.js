@@ -72,7 +72,7 @@ const getSelectedGames = (games) => {
 };
 
 const getSuccessGames = (games, file) => {
-    let statisFile = file.statistics
+    let statisFile = file.statistics;
     let obj = {};
     let obj2 = {};
     if(statisFile.allGame) {
@@ -85,9 +85,9 @@ const getSuccessGames = (games, file) => {
         let successGame = [];
         games.forEach(game => {
             if(obj[game.id] && obj2[game.id] && (obj2[game.id].set === "Перерыв")) {
-                let count = Number(game.set1player1) + Number(game.set1player2);
+                let count = Number(obj2[game.id].set1player1) + Number(obj2[game.id].set1player2);
                 if (count > 0) {
-                    successGame.push(obj[game.id])
+                    successGame.push(obj2[game.id])
                 }
             }
         });
@@ -96,7 +96,7 @@ const getSuccessGames = (games, file) => {
 };
 
 const getFailGames = (games, file) => {
-    let statisFile = file.statistics
+    let statisFile = file.statistics;
     let obj = {};
     let obj2 = {};
     if(statisFile.allGame) {
@@ -109,9 +109,9 @@ const getFailGames = (games, file) => {
         let failGame = [];
         games.forEach(game => {
             if((obj[game.id]) && obj2[game.id] && (obj2[game.id].set === "Перерыв")) {
-                let count = Number(obj[game.id].set1player1) + Number(obj[game.id].set1player2);
+                let count = Number(obj2[game.id].set1player1) + Number(obj2[game.id].set1player2);
                 if (count === 0) {
-                    failGame.push(obj[game.id])
+                    failGame.push(obj2[game.id])
                 }
             }
         });
@@ -148,10 +148,8 @@ const sendMessages = (subject, subjectFile, result) => {
                 + player2 + ":  " + set1player2 + "\n"
                 + `время 1 тайма, ${timeGame} минута\n` +
                 "\nМожно ставить на ТБ 0,5 в первом тайме"
-            setTimeout(() => {
                 xhttp.open("GET", url1 + encodeURIComponent(text), true)
                 xhttp.send();
-            }, 1000)
         }
     });
 };
@@ -291,10 +289,8 @@ console.log(statisFile.allCount, statisFile.failCount, statisFile.successCount)
                         `Побед: ${successCount} ✅\n`+
                         `Поражений: ${failCount} ❌\n`+
                         `${passPercent}`;
-            setTimeout(() => {
                 xhttp.open("GET", url1 + encodeURIComponent(text), true)
                 xhttp.send();
-            }, 1000)
             myWriteFile(JSON.stringify(statistics, null, 2));
         } else {
             myWriteFile(JSON.stringify(statistics, null, 2));
